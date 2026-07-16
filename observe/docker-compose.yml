@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: observe-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: observe
+      POSTGRES_USER: observe_user
+      POSTGRES_PASSWORD: observe_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - observe-pg-data:/var/lib/postgresql
+
+  redis:
+    image: redis:7
+    container_name: observe-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - observe-redis-data:/data
+
+volumes:
+  observe-pg-data:
+  observe-redis-data:

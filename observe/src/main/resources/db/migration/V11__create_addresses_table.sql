@@ -1,0 +1,13 @@
+CREATE TABLE addresses (
+    id UUID PRIMARY KEY,
+    street VARCHAR(255) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    zip_code VARCHAR(10) NOT NULL,
+    country VARCHAR(50) NOT NULL,
+    is_default BOOLEAN NOT NULL DEFAULT FALSE,
+    user_id UUID NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

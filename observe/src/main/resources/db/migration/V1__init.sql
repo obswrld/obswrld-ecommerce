@@ -1,0 +1,2 @@
+-- Initial migration placeholder
+-- Tables will be added in the Database Schema Design section
