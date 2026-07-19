@@ -42,7 +42,7 @@ public class Payment {
     @Column(name = "transaction_reference", nullable = false, unique = true)
     private String transactionReference;
 
-    @Column(name = "gateway_reference", length = 255)
+    @Column(name = "gateway_reference",length = 255)
     private String gatewayReference;
 
     @CreationTimestamp
