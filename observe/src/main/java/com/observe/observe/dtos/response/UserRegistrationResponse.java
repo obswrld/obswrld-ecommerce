@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegistrationResponse {
@@ -17,6 +18,8 @@ public class UserRegistrationResponse {
     private String email;
 
     private String fullName;
+
+    private String username;
 
     private String phoneNumber;
 

@@ -22,6 +22,7 @@ public class PaymentResponse {
 
     private PaymentMethod paymentMethod;
 
+    
     private PaymentStatus status;
 
     private String transactionReference;
