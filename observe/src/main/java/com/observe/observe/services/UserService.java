@@ -7,17 +7,23 @@ import java.util.UUID;
 import com.observe.observe.dtos.request.UpdateProfileRequest;
 import com.observe.observe.dtos.request.UserRegisterRequest;
 import com.observe.observe.dtos.response.UserRegistrationResponse;
+import com.observe.observe.mapper.Mapper;
 import com.observe.observe.models.*;
 import com.observe.observe.repositories.UserRepository;
 
 @Service
 public class UserService {
+    
     private final UserRepository userRepository;
+    private final Mapper mapper;
 
-    public UserService(UserRepository userRepository) {
+    // constructor
+    public UserService(UserRepository userRepository, Mapper mapper) {
         this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
+    // this method registers a new user
     public UserRegistrationResponse register(UserRegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
@@ -29,35 +35,19 @@ public class UserService {
         User user = User.builder()
             .email(request.getEmail())
             .username(request.getUsername())
-            .passwordHash(hashPassword(request.getPassword()))
+            .passwordHash(mapper.hashPassword(request.getPassword()))
             .fullName(request.getFullName())
             .phoneNumber(request.getPhoneNumber())
             .role(Role.BUYER)
-            .isActive(true)
+            .isActive(true)     
             .build();
 
         User savedUser = userRepository.save(user);
 
-        return mapToResponse(savedUser);
+        return mapper.mapToResponse(savedUser);
     }
 
-    private UserRegistrationResponse mapToResponse(User user) {
-        return UserRegistrationResponse.builder()
-            .id(user.getId())
-            .email(user.getEmail())
-            .username(user.getUsername())
-            .fullName(user.getFullName())
-            .phoneNumber(user.getPhoneNumber())
-            .role(user.getRole())
-            .isActive(user.isActive())
-            .createdAt(user.getCreatedAt())
-            .build();
-    }
-
-    private String hashPassword(String password) {
-        return password;
-    }
-
+    // this method returns the user's profile
     public UserRegistrationResponse getProfile(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -66,9 +56,10 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        return mapToResponse(user);
+        return mapper.mapToResponse(user);
     }
 
+    // this method for updating the user's profile
     public UserRegistrationResponse updateProfile(UUID id, UpdateProfileRequest request) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -87,15 +78,16 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(user);
-        return mapToResponse(savedUser);
+        return mapper.mapToResponse(savedUser);
     }
 
+    // this method deactivates the account by setting isActive to false
     public UserRegistrationResponse deActivateAccount(UUID id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         user.setActive(false);
         User savedUser = userRepository.save(user);
-        return mapToResponse(savedUser);
+        return mapper.mapToResponse(savedUser);
     }
 }
