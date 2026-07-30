@@ -12,7 +12,7 @@ import com.observe.observe.models.Address;
 import com.observe.observe.models.User;
 import com.observe.observe.repositories.AddressRepository;
 import com.observe.observe.repositories.UserRepository;
-import com.observe.observe.mapper.Mapper;
+import com.observe.observe.mappers.Mapper;
 
 @Service
 public class AddressService {
@@ -58,7 +58,7 @@ public class AddressService {
     // this method returns all addresses for a user
     public List<AddressResponse> getUserAddress(UUID userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<Address> addresses = addressRepository.findByUser(user);
         return addresses.stream().map(mapper::mapToAddressResponse).toList();
     }
@@ -70,7 +70,15 @@ public class AddressService {
         if (!address.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("Address does not belong to user");
         }
-        
+
+        if (Boolean.TRUE.equals(request.getIsDefault()) && !Boolean.TRUE.equals(address.getIsDefault())) {
+            addressRepository.findByUserAndIsDefault(address.getUser(), true)
+                .ifPresent(existingAddress -> {
+                    existingAddress.setIsDefault(false);
+                    addressRepository.save(existingAddress);
+                });
+        }
+
         address.setStreet(request.getStreet());
         address.setCity(request.getCity());
         address.setState(request.getState());

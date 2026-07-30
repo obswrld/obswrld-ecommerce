@@ -7,7 +7,7 @@ import java.util.UUID;
 import com.observe.observe.dtos.request.UpdateProfileRequest;
 import com.observe.observe.dtos.request.UserRegisterRequest;
 import com.observe.observe.dtos.response.UserRegistrationResponse;
-import com.observe.observe.mapper.Mapper;
+import com.observe.observe.mappers.Mapper;
 import com.observe.observe.models.*;
 import com.observe.observe.repositories.UserRepository;
 
@@ -35,7 +35,7 @@ public class UserService {
         User user = User.builder()
             .email(request.getEmail())
             .username(request.getUsername())
-            .passwordHash(mapper.hashPassword(request.getPassword()))
+            .passwordHash(hashPassword(request.getPassword()))
             .fullName(request.getFullName())
             .phoneNumber(request.getPhoneNumber())
             .role(Role.BUYER)
@@ -50,7 +50,7 @@ public class UserService {
     // this method returns the user's profile
     public UserRegistrationResponse getProfile(UUID id) {
         if (id == null) {
-            throw new IllegalArgumentException("Id cannot be null");
+            throw new IllegalArgumentException("ID cannot be null");
         }
         
         User user = userRepository.findById(id)
@@ -89,5 +89,10 @@ public class UserService {
         user.setActive(false);
         User savedUser = userRepository.save(user);
         return mapper.mapToResponse(savedUser);
+    }
+
+    // this method hashes a password
+    private String hashPassword(String password) {
+        return password;
     }
 }

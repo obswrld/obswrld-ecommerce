@@ -1,6 +1,5 @@
 package com.observe.observe.dtos.request;
 
-import com.observe.observe.models.ProductStatus;
 import java.math.BigDecimal;
 import java.util.UUID;
 

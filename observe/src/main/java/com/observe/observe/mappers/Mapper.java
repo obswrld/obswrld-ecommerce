@@ -1,4 +1,4 @@
-package com.observe.observe.mapper;
+package com.observe.observe.mappers;
 
 import com.observe.observe.dtos.response.AddressResponse;
 import com.observe.observe.dtos.response.UserRegistrationResponse;
@@ -24,15 +24,11 @@ public class Mapper {
             .build();
     }
 
-    // this method hashes a password
-    public String hashPassword(String password) {
-        return password;
-    }
-
     // this method maps an Address entity to an AddressResponse DTO
     public AddressResponse mapToAddressResponse(Address address) {
         AddressResponse response = new AddressResponse();
         response.setId(address.getId());
+        response.setUserId(address.getUser().getId());
         response.setStreet(address.getStreet());
         response.setCity(address.getCity());
         response.setState(address.getState());
